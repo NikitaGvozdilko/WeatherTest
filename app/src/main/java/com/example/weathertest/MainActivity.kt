@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
 
         toolbar.title = ""
         setSupportActionBar(toolbar)
+        imageLocation.setOnClickListener {
+            mainFragment?.getCurrentLocationWeather()
+        }
         val placeName = AppPref.getPlaceName(this)
         if (placeName != null) textToolbarTitle?.text = placeName
 
