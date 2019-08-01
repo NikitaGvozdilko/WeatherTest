@@ -97,6 +97,7 @@ class MainFragment : Fragment(), LocationListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        resetViews()
         weekAdapter = WeekAdapter(context!!, onDayItemClickListener)
         dayAdapter = DayAdapter(context!!)
         recyclerDates?.adapter = weekAdapter
@@ -167,5 +168,12 @@ class MainFragment : Fragment(), LocationListener {
         } else {
             getCurrentLocationWeather()
         }
+    }
+
+    private fun resetViews() {
+        textDayOfWeek.text = ""
+        textHumidity.text = ""
+        textWind.text = ""
+        textTemperature.text = ""
     }
 }
