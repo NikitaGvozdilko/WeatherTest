@@ -7,15 +7,9 @@ class WeatherForecast {
     @SerializedName("list")
     var forecast: List<Weather>? = null
 
-    //Возвращает прогноз на 15:00 каждого дня.
-    //Если текущий день прошел отметку 15:00, то на этот день возвращает самый ранний прогноз
     fun getWeeklyForecast(): List<Weather>? {
         if (forecast.isNullOrEmpty()) return null
         val temp = ArrayList<Weather>()
-        /*int today_min_h = forecast.get(0).getDate().get(Calendar.HOUR_OF_DAY);
-        if (today_min_h > 15) {
-            temp.add(forecast.get(0));
-        }*/
         var maxHum = -1.0
         var minHum = 101.0
         var minTemp = 200.0
@@ -55,21 +49,6 @@ class WeatherForecast {
         return temp
     }
 
-    //Возвращает подробный прогноз на остаток дня
-    //shift - сдвиг ( 0 - текущий день, 1 - следующий, 2 - через день.. )
-    fun getDailyForecast(shift: Int): List<Weather>? {
-        if (forecast.isNullOrEmpty()) return null
-        val temp = ArrayList<Weather>()
-        val day_num = forecast!![shift * 8].date.get(Calendar.DAY_OF_MONTH)
-        for (weather in forecast!!) {
-            if (weather.date.get(Calendar.DAY_OF_MONTH) == day_num)
-                temp.add(weather)
-            else if (!temp.isEmpty() && temp.size < 10)
-                temp.add(weather)
-        }
-        return temp
-    }
-
     fun getDailyForecastByDay(day: Int): List<Weather>? {
         if (forecast.isNullOrEmpty()) return null
         val temp = ArrayList<Weather>()
@@ -81,20 +60,4 @@ class WeatherForecast {
         }
         return temp
     }
-
-
-    /*fun getDailyForecast(shift: Int): List<Weather>? {
-        if (forecast.isNullOrEmpty()) return null
-        val temp = ArrayList<Weather>()
-        val day_num = forecast!![shift * 8].date.get(Calendar.DAY_OF_MONTH)
-        for (weather in forecast!!) {
-            if (weather.date.get(Calendar.DAY_OF_MONTH) == day_num)
-                temp.add(weather)
-            else if (!temp.isEmpty() && temp.size < 10)
-                temp.add(weather)
-
-
-        }
-        return temp
-    }*/
 }

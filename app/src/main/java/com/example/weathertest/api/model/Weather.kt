@@ -17,14 +17,6 @@ class Weather {
 
     var temperatureRange: String? = null
 
-    constructor(weather: Weather) {
-        this.weatherTemp = weather.weatherTemp
-        this.weatherDescr = weather.weatherDescr
-        this.time = weather.time
-        this.wind = weather.wind
-
-    }
-
     val date: Calendar
         get() {
             val date = Calendar.getInstance()
@@ -58,6 +50,14 @@ class Weather {
         set(value) {
             weatherDescr!![0].main = value!!
         }
+
+    constructor(weather: Weather) {
+        this.weatherTemp = weather.weatherTemp
+        this.weatherDescr = weather.weatherDescr
+        this.time = weather.time
+        this.wind = weather.wind
+    }
+
 
     fun setTemperatureRange(minTemp: Double, maxTemp: Double) {
         temperatureRange = "${maxTemp.toInt()}°/${minTemp.toInt()}°"

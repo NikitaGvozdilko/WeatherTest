@@ -1,12 +1,12 @@
 package com.example.weathertest.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weathertest.R
 import com.example.weathertest.api.model.Weather
 import com.example.weathertest.utils.Utils
@@ -15,15 +15,11 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeekAdapter(private val context: Context,
-                  private val onDayItemClickListener: OnItemClickListener) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
+class WeekAdapter(private val context: Context
+                  , private val onDayItemClickListener: OnItemClickListener) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
     private var weatherList: List<Weather>? = null
-    private var format: DateFormat? = null
+    private var format: DateFormat = SimpleDateFormat("EE")
     private var selectedWeather: Weather? = null
-
-    init {
-        format = SimpleDateFormat("EE")
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_day_of_week, parent, false)
@@ -33,11 +29,11 @@ class WeekAdapter(private val context: Context,
     override fun getItemCount(): Int = weatherList?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(weatherList != null) {
+        if (weatherList != null) {
             holder.apply {
                 if (weatherList!![position] == (selectedWeather)) rootItem?.setBackgroundResource(R.color.selectedColor)
                 else rootItem?.setBackgroundResource(android.R.color.white)
-                textDayOfWeek?.text = format?.format(weatherList!![position].date.time)
+                textDayOfWeek?.text = format.format(weatherList!![position].date.time)
                 textTemperature?.text = weatherList!![position].temperatureRange
                 holder.rootItem?.setOnClickListener {
                     selectedWeather = weatherList!![position]
@@ -46,8 +42,11 @@ class WeekAdapter(private val context: Context,
                 }
                 if (weatherList!![position].weatherDescription != null) {
                     imageWeather?.setImageResource(
-                            Utils.getWeatherIcon(weatherList!![position].weatherDescription!!,
-                                    weatherList!![position].date.get(Calendar.HOUR_OF_DAY)))
+                        Utils.getWeatherIcon(
+                            weatherList!![position].weatherDescription!!,
+                            weatherList!![position].date.get(Calendar.HOUR_OF_DAY)
+                        )
+                    )
                 }
             }
         }

@@ -1,12 +1,12 @@
 package com.example.weathertest.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weathertest.R
 import com.example.weathertest.api.model.Weather
 import com.example.weathertest.utils.Utils
@@ -37,8 +37,12 @@ class DayAdapter(private val context: Context) : RecyclerView.Adapter<DayAdapter
             holder.apply {
                 textTemperature?.text = weatherList!![position].temperatureStr
                 textTimeHours?.text = format?.format(weatherList!![position].date.time)
-                imageWeather?.setImageResource(Utils.getWeatherIcon(weatherList!![position].weatherDescription!!,
-                        weatherList!![position].date.get(Calendar.HOUR_OF_DAY)))
+                imageWeather?.setImageResource(
+                    Utils.getWeatherIcon(
+                        weatherList!![position].weatherDescription!!,
+                        weatherList!![position].date.get(Calendar.HOUR_OF_DAY)
+                    )
+                )
             }
         }
     }
