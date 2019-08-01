@@ -6,13 +6,12 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 
+private val TAG = "AppPref"
 object AppPref {
-    private val PREF_TOKEN: String = "token"
-    private val PREF_PASSWORD: String = "password"
     private val PREF_PLACE_NAME: String = "place_name"
     private val PREF_LAT: String = "lat"
     private val PREF_LON: String = "lon"
-    private val TAG = "AppPref"
+
 
     private fun getSharedPref(context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
@@ -41,11 +40,4 @@ object AppPref {
         if (lat == -1111.0f || lon == -1111.0f) return null
         return LatLng(lat.toDouble(), lon.toDouble())
     }
-
-    fun getToken(context: Context) = getSharedPref(context).getString(PREF_TOKEN, null)
-
-    fun cleanLoginData(context: Context) {
-        getSharedPref(context).edit().remove(PREF_PLACE_NAME).remove(PREF_PASSWORD).remove(PREF_TOKEN).apply()
-    }
-
-}//no instance
+}

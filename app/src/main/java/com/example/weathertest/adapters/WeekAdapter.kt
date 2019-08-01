@@ -31,20 +31,21 @@ class WeekAdapter(private val context: Context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (weatherList != null) {
             holder.apply {
-                if (weatherList!![position] == (selectedWeather)) rootItem?.setBackgroundResource(R.color.selectedColor)
+                val weather = weatherList!![position]
+                if (weather == (selectedWeather)) rootItem?.setBackgroundResource(R.color.selectedColor)
                 else rootItem?.setBackgroundResource(android.R.color.white)
-                textDayOfWeek?.text = format.format(weatherList!![position].date.time)
-                textTemperature?.text = weatherList!![position].temperatureRange
+                textDayOfWeek?.text = format.format(weather.date.time)
+                textTemperature?.text = weather.temperatureRange
                 holder.rootItem?.setOnClickListener {
-                    selectedWeather = weatherList!![position]
+                    selectedWeather = weather
                     onDayItemClickListener.onClick(selectedWeather!!)
                     notifyDataSetChanged()
                 }
-                if (weatherList!![position].weatherDescription != null) {
+                if (weather.weatherDescription != null) {
                     imageWeather?.setImageResource(
                         Utils.getWeatherIcon(
-                            weatherList!![position].weatherDescription!!,
-                            weatherList!![position].date.get(Calendar.HOUR_OF_DAY)
+                            weather.weatherDescription!!,
+                            weather.date.get(Calendar.HOUR_OF_DAY)
                         )
                     )
                 }

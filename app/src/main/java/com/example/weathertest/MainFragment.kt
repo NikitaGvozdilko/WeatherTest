@@ -2,11 +2,21 @@ package com.example.weathertest
 
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weathertest.adapters.DayAdapter
@@ -15,20 +25,13 @@ import com.example.weathertest.api.model.Weather
 import com.example.weathertest.api.model.WeatherForecast
 import com.example.weathertest.utils.AppPref
 import com.example.weathertest.utils.Utils
+import com.example.weathertest.utils.WeatherManager
 import kotlinx.android.synthetic.main.fragment_main.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import android.view.animation.AnimationUtils
-import com.example.weathertest.utils.WeatherManager
-import android.content.Context.LOCATION_SERVICE
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.provider.Settings
-import androidx.core.app.ActivityCompat
-import android.app.AlertDialog
-import android.location.*
 
+const val RQ_LOCATION = 1
 
 class MainFragment : Fragment(), LocationListener {
     private var weekAdapter: WeekAdapter? = null
@@ -49,7 +52,6 @@ class MainFragment : Fragment(), LocationListener {
             if (day.weatherDescription != null)
                 imageWeather?.setImageResource(Utils.getWeatherIcon(day.weatherDescription!!, day.date.get(Calendar.HOUR_OF_DAY)))
         }
-
     }
 
     private val onWeatherLoadedListener = object : WeatherManager.OnWeatherLoadedListener {
@@ -79,7 +81,6 @@ class MainFragment : Fragment(), LocationListener {
         override fun onFailure(error: String) {
             Toast.makeText(context!!, error, Toast.LENGTH_LONG).show()
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,12 +88,6 @@ class MainFragment : Fragment(), LocationListener {
         setHasOptionsMenu(true)
         locationManager = context!!.getSystemService(LOCATION_SERVICE) as LocationManager?
         initManager()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //if (weatherForecast == null) getCurrentLocationWeather()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -128,6 +123,15 @@ class MainFragment : Fragment(), LocationListener {
     override fun onProviderDisabled(p0: String?) {
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            RQ_LOCATION -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    getCurrentLocationWeather()
+            }
+        }
+    }
+
     fun updateWeather(latitude: Double, longitude: Double) {
         weatherManager?.lat = latitude
         weatherManager?.lon = longitude
@@ -137,7 +141,7 @@ class MainFragment : Fragment(), LocationListener {
     fun getCurrentLocationWeather() {
         if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), RQ_LOCATION)
         } else {
             if (!locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)!!) {
                 val builder = AlertDialog.Builder(context!!)

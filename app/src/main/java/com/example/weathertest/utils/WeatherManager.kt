@@ -23,7 +23,6 @@ class WeatherManager {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApi::class.java)
-
     }
 
     fun getWeather(onWeatherLoadedListener: OnWeatherLoadedListener) {
@@ -35,7 +34,7 @@ class WeatherManager {
             }
 
             override fun onFailure(call: Call<WeatherForecast>, t: Throwable) {
-                onWeatherLoadedListener.onFailure(t?.message ?: "Error loading weather")
+                onWeatherLoadedListener.onFailure(t.message ?: "Error loading weather")
             }
         })
     }
