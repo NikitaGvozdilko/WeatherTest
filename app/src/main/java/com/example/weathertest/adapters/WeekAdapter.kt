@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weathertest.R
 import com.example.weathertest.api.model.Weather
@@ -15,14 +16,13 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeekAdapter(private val context: Context
-                  , private val onDayItemClickListener: OnItemClickListener) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
+class WeekAdapter(var selectedDay: MutableLiveData<Weather>) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
     private var weatherList: List<Weather>? = null
     private var format: DateFormat = SimpleDateFormat("EE")
     private var selectedWeather: Weather? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_day_of_week, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_day_of_week, parent, false)
         return ViewHolder(view)
     }
 
@@ -38,7 +38,7 @@ class WeekAdapter(private val context: Context
                 textTemperature?.text = weather.temperatureRange
                 holder.rootItem?.setOnClickListener {
                     selectedWeather = weather
-                    onDayItemClickListener.onClick(selectedWeather!!)
+                    selectedDay.value = selectedWeather
                     notifyDataSetChanged()
                 }
                 if (weather.weatherDescription != null) {
@@ -71,9 +71,5 @@ class WeekAdapter(private val context: Context
             textTemperature = itemView.textTemperature
             imageWeather = itemView.imageWeather
         }
-    }
-
-    interface OnItemClickListener {
-        fun onClick(day: Weather)
     }
 }

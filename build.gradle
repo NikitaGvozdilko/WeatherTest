@@ -23,6 +23,11 @@ allprojects {
     }
 }
 
+ext {
+    daggerVersion = '2.20'
+    retrofitVersion = '2.5.0'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

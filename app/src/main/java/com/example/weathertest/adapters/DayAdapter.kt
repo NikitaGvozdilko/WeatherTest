@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class DayAdapter(private val context: Context) : RecyclerView.Adapter<DayAdapter.ViewHolder>() {
+class DayAdapter() : RecyclerView.Adapter<DayAdapter.ViewHolder>() {
     private var weatherList: List<Weather>? = null
     private var format: DateFormat? = null
 
@@ -25,7 +25,7 @@ class DayAdapter(private val context: Context) : RecyclerView.Adapter<DayAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_day_temperature, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_day_temperature, parent, false)
         return ViewHolder(view)
     }
 
