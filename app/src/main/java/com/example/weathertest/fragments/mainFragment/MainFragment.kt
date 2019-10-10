@@ -38,6 +38,7 @@ class MainFragment : Fragment(), IMainView {
     private var mViewModel: MainViewModel? = null
     private var mGlide: RequestManager? = null
     private val formatter: DateFormat = SimpleDateFormat("EE, dd MMM")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -73,11 +74,6 @@ class MainFragment : Fragment(), IMainView {
 
         if (!mViewModel?.containData()!!)
             loadWeather()
-       /* else {
-            val weeklyForecast = mViewModel?.getWeatherFromLD()?.getWeeklyForecast()!!
-            mWeekAdapter?.updateData(weeklyForecast)
-            updateWeatherInfo(weeklyForecast[0])
-        }*/
     }
 
 
