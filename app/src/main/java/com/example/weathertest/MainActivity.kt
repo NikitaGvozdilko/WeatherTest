@@ -25,6 +25,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
+            mainFragment = MainFragment()
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, mainFragment!!).commit()
+        } else {
+            mainFragment = supportFragmentManager.fragments[0] as MainFragment?
+        }
+
         toolbar.title = ""
         setSupportActionBar(toolbar)
         imageLocation.setOnClickListener {
@@ -32,9 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
         val placeName = AppPref.getPlaceName(this)
         if (placeName != null) textToolbarTitle?.text = placeName
-
-        mainFragment = MainFragment()
-        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, mainFragment!!).commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

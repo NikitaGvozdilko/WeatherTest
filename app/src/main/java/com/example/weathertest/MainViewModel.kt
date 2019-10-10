@@ -20,8 +20,8 @@ import com.example.weathertest.api.model.WeatherForecast
 import com.example.weathertest.fragments.mainFragment.RQ_LOCATION
 
 class MainViewModel(private val weatherManager: WeatherManager,
-                    private val mLocationManager: LocationManager,
-                    private val weather: MutableLiveData<WeatherForecast>) : ViewModel() {
+                    private val mLocationManager: LocationManager) : ViewModel() {
+    val weather = MutableLiveData<WeatherForecast>()
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
@@ -47,6 +47,10 @@ class MainViewModel(private val weatherManager: WeatherManager,
         }, {
             println("ERROR" + it.message)
         })
+    }
+
+    fun getWeatherFromLD() : WeatherForecast? {
+        return weather.value
     }
 
     fun getDailyForecastByDay(day: Int): List<Weather>? {
@@ -82,11 +86,14 @@ class MainViewModel(private val weatherManager: WeatherManager,
         }
     }
 
+    fun containData() : Boolean {
+        return weather.value != null
+    }
+
     class CustomViewModelFactory(private val weatherManager: WeatherManager,
-                                 private val mLocationManager: LocationManager,
-                                 private val weatherForecast: MutableLiveData<WeatherForecast>) : ViewModelProvider.NewInstanceFactory() {
+                                 private val mLocationManager: LocationManager) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return  MainViewModel(weatherManager, mLocationManager, weatherForecast) as T
+            return  MainViewModel(weatherManager, mLocationManager) as T
         }
     }
 }

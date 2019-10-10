@@ -63,17 +63,17 @@ class Weather {
         temperatureRange = "${maxTemp.toInt()}°/${minTemp.toInt()}°"
     }
 
-    data class Wind (
-        var speed: Double,
-        var deg: Double
+    data class Wind(
+            var speed: Double,
+            var deg: Double
     )
 
-    private data class WeatherValue (
-        var temp: Double,
-        var humidity: Double
+    private data class WeatherValue(
+            var temp: Double,
+            var humidity: Double
     )
 
-    private data class WeatherDescr (
-        var main: String
+    private data class WeatherDescr(
+            var main: String
     )
 }

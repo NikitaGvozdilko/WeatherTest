@@ -1,6 +1,5 @@
 package com.example.weathertest.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import com.example.weathertest.R
 import com.example.weathertest.api.model.Weather
 import com.example.weathertest.utils.Utils
@@ -16,7 +16,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeekAdapter(var selectedDay: MutableLiveData<Weather>) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
+class WeekAdapter(private var selectedDay: MutableLiveData<Weather>, private val glide: RequestManager) : RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
     private var weatherList: List<Weather>? = null
     private var format: DateFormat = SimpleDateFormat("EE")
     private var selectedWeather: Weather? = null
@@ -42,12 +42,10 @@ class WeekAdapter(var selectedDay: MutableLiveData<Weather>) : RecyclerView.Adap
                     notifyDataSetChanged()
                 }
                 if (weather.weatherDescription != null) {
-                    imageWeather?.setImageResource(
-                        Utils.getWeatherIcon(
+                    glide.load(Utils.getWeatherIcon(
                             weather.weatherDescription!!,
-                            weather.date.get(Calendar.HOUR_OF_DAY)
-                        )
-                    )
+                            weather.date.get(Calendar.HOUR_OF_DAY)))
+                            .into(imageWeather!!)
                 }
             }
         }

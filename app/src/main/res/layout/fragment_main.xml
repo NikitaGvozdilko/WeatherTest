@@ -4,11 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1.0">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include layout="@layout/layout_today_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"/>
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
         android:background="@color/colorPrimaryDark">
 
         <TextView
@@ -17,8 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:textAllCaps="true"
             android:text="ПТ, 20 июля"
+            android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,10 +33,13 @@
 
         <ImageView
             android:id="@+id/imageWeather"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_marginStart="60dp"
-            android:src="@drawable/ic_white_day_cloudy"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_white_day_bright"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textDayOfWeek" />
 
@@ -38,7 +48,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
             android:src="@drawable/ic_temp"
             app:layout_constraintStart_toEndOf="@id/imageWeather"
             app:layout_constraintTop_toTopOf="@id/imageWeather" />
@@ -100,27 +109,33 @@
             android:layout_height="30dp"
             android:layout_marginStart="4dp"
             android:src="@drawable/ic_wind_dir"
-            app:layout_constraintStart_toEndOf="@id/textWind"
-            app:layout_constraintBottom_toBottomOf="@id/textWind" />
+            app:layout_constraintBottom_toBottomOf="@id/textWind"
+            app:layout_constraintStart_toEndOf="@id/textWind" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerTemperature"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layoutAnimation="@anim/layout_anim_appear"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_day_temperature" />
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerDates"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_day_of_week" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/layout_anim_appear"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_day_temperature" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerDates"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_day_of_week" />
+    </LinearLayout>
 
 
 </LinearLayout>

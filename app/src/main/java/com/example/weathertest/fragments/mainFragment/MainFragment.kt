@@ -2,31 +2,33 @@ package com.example.weathertest.fragments.mainFragment
 
 
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.weathertest.MainViewModel
 import com.example.weathertest.R
-import com.example.weathertest.WeatherManager
 import com.example.weathertest.adapters.DayAdapter
 import com.example.weathertest.adapters.WeekAdapter
 import com.example.weathertest.api.model.Weather
+import com.example.weathertest.api.model.WeatherForecast
 import com.example.weathertest.fragments.mainFragment.di.DaggerMainComponent
-import com.example.weathertest.fragments.mainFragment.di.MainComponent
 import com.example.weathertest.fragments.mainFragment.di.MainModule
 import com.example.weathertest.utils.AppPref
 import com.example.weathertest.utils.Utils
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.layout_today_info.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 const val RQ_LOCATION = 1
 
@@ -44,9 +46,13 @@ class MainFragment : Fragment(), IMainView {
         mDayAdapter = mainComponent.getDayAdapter()
         mWeekAdapter = mainComponent.getWeekAdapter()
 
-        mGlide = Glide.with(this)
+        mViewModel?.weather?.observe(this, androidx.lifecycle.Observer { weatherForecast ->
+            val weeklyForecast = weatherForecast?.getWeeklyForecast()!!
+            mWeekAdapter?.updateData(weeklyForecast)
+            updateWeatherInfo(weeklyForecast[0])
+        })
 
-        loadWeather()
+        mGlide = mainComponent.getGlide()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,7 +70,16 @@ class MainFragment : Fragment(), IMainView {
         recyclerTemperature?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val animation = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_anim_appear)
         recyclerTemperature.layoutAnimation = animation
+
+        if (!mViewModel?.containData()!!)
+            loadWeather()
+       /* else {
+            val weeklyForecast = mViewModel?.getWeatherFromLD()?.getWeeklyForecast()!!
+            mWeekAdapter?.updateData(weeklyForecast)
+            updateWeatherInfo(weeklyForecast[0])
+        }*/
     }
+
 
     override fun updateWeatherInfo(weather: Weather) {
         textDayOfWeek?.text = formatter.format(weather.date.time)
@@ -72,11 +87,15 @@ class MainFragment : Fragment(), IMainView {
         textHumidity?.text = weather.humidityStr
         textWind?.text = "${weather.windSpeed}м/сек"
         imageWindDir?.rotation = weather.windDirection.toFloat()
+
+        val simpleOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         if (weather.weatherDescription != null)
             mGlide?.load(Utils.getWeatherIcon(
-                weather.weatherDescription!!,
-                weather.date.get(Calendar.HOUR_OF_DAY)))
-                ?.into(imageWeather)
+                    weather.weatherDescription!!,
+                    weather.date.get(Calendar.HOUR_OF_DAY)))
+                    ?.apply(simpleOptions)
+                    ?.into(imageWeather)
 
         mDayAdapter?.updateData(mViewModel?.getDailyForecastByDay(weather.date.get(Calendar.DAY_OF_MONTH))!!)
         recyclerTemperature.scheduleLayoutAnimation()

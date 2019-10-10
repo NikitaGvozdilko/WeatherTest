@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.weathertest.MainViewModel
 import com.example.weathertest.WeatherManager
 import com.example.weathertest.adapters.DayAdapter
@@ -22,17 +24,24 @@ class MainModule(@get:Provides val fragmentActivity: FragmentActivity, @get:Prov
 
     @SingleScope
     @Provides
-    fun provideWeekAdapter(fragmentActivity: FragmentActivity, view: IMainView): WeekAdapter {
+    fun provideGlide(fragmentActivity: FragmentActivity): RequestManager {
+        return Glide.with(fragmentActivity)
+    }
+
+    @SingleScope
+    @Provides
+    fun provideWeekAdapter(fragmentActivity: FragmentActivity, glide: RequestManager, view: IMainView): WeekAdapter {
         val selectedDay = MutableLiveData<Weather>()
         selectedDay.observe(fragmentActivity, Observer { day ->
             view.updateWeatherInfo(day)
         })
-        return WeekAdapter(selectedDay)
+        return WeekAdapter(selectedDay, glide)
     }
 
+    @SingleScope
     @Provides
-    fun provideDayAdapter(): DayAdapter {
-        return DayAdapter()
+    fun provideDayAdapter(glide: RequestManager): DayAdapter {
+        return DayAdapter(glide)
     }
 
     @Provides
@@ -40,18 +49,12 @@ class MainModule(@get:Provides val fragmentActivity: FragmentActivity, @get:Prov
         return WeatherManagerImpl()
     }
 
+    @SingleScope
     @Provides
-    fun provideViewModel(context: FragmentActivity, weatherManager: WeatherManager, weekAdapter: WeekAdapter, view: IMainView): MainViewModel {
+    fun provideViewModel(context: FragmentActivity, weatherManager: WeatherManager): MainViewModel {
         val mLocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        val weather = MutableLiveData<WeatherForecast>()
-        weather.observe(context, Observer<WeatherForecast> { weatherForecast ->
-            val weeklyForecast = weatherForecast?.getWeeklyForecast()!!
-            weekAdapter.updateData(weeklyForecast)
-            view.updateWeatherInfo(weeklyForecast[0])
-        })
-        val factory = MainViewModel.CustomViewModelFactory(weatherManager, mLocationManager!!, weather)
+        val factory = MainViewModel.CustomViewModelFactory(weatherManager, mLocationManager!!)
         val viewModel = ViewModelProviders.of(context, factory).get(MainViewModel::class.java)
-
         return viewModel
     }
 }
