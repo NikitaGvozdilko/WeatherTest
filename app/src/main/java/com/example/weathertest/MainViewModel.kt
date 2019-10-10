@@ -49,10 +49,6 @@ class MainViewModel(private val weatherManager: WeatherManager,
         })
     }
 
-    fun getWeatherFromLD() : WeatherForecast? {
-        return weather.value
-    }
-
     fun getDailyForecastByDay(day: Int): List<Weather>? {
         return weather.value?.getDailyForecastByDay(day)
     }
