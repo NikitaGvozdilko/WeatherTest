@@ -11,21 +11,26 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.example.weathertest.api.WeatherManagerImpl
 import com.example.weathertest.api.model.Weather
 import com.example.weathertest.api.model.WeatherForecast
 import com.example.weathertest.fragments.mainFragment.RQ_LOCATION
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
+import org.reactivestreams.Publisher
+import org.reactivestreams.Subscriber
 
 class MainViewModel(private val weatherManager: WeatherManager,
-                    private val mLocationManager: LocationManager) : ViewModel() {
+                    private val mLocationManager: LocationManager) : ViewModel(), LifecycleObserver {
     val weather = MutableLiveData<WeatherForecast>()
+    val errors = PublishSubject.create<String>()
+    private val compositeDisposable = CompositeDisposable()
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
             updateLocation(location!!.latitude, location.longitude)
+            mLocationManager.removeUpdates(this)
             getWeather()
         }
 
@@ -39,14 +44,25 @@ class MainViewModel(private val weatherManager: WeatherManager,
         }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun cleanUp() {
+        compositeDisposable.dispose()
+    }
+
     fun getWeather() {
-        weatherManager?.getWeather()?.subscribe({
-            if (it?.forecast == null) return@subscribe
-            weather?.value = it
-            mLocationManager?.removeUpdates(locationListener)
+        val disposable = weatherManager.getWeather()?.subscribe({
+            if (it?.forecast == null) {
+                errors.onNext("No data available")
+                return@subscribe
+            }
+            weather.value = it
         }, {
             println("ERROR" + it.message)
+            errors.onNext(it.localizedMessage)
         })
+        if (disposable != null)
+            compositeDisposable.add(disposable)
+
     }
 
     fun getDailyForecastByDay(day: Int): List<Weather>? {
