@@ -20,7 +20,7 @@ class WeatherForecast {
         var day = forecast!![0].date.get(Calendar.DAY_OF_MONTH)
         var weatherTemp = forecast!![0]
         for (weather in forecast!!) {
-            if (weather.date.get(Calendar.DAY_OF_MONTH) != day || (forecast?.size?. minus(1)) == forecast?.indexOf(weather)) {
+            if (weather.date.get(Calendar.DAY_OF_MONTH) != day) {
                 day = weather.date.get(Calendar.DAY_OF_MONTH)
                 val weatherToAdd = Weather(weatherTemp).apply {
                     weatherDescription = weatherDescr
@@ -36,7 +36,7 @@ class WeatherForecast {
                 maxTemp = weather.temperature
                 weatherTemp = weather
             }
-            if (weather.date.get(Calendar.HOUR_OF_DAY) == 15) {
+            if (weather.date.get(Calendar.HOUR_OF_DAY) == 14) {
                 weatherDescr = weather.weatherDescription
                 timeTemp = weather.time
                 windTemp = weather.wind
