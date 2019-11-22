@@ -20,7 +20,7 @@
     <ImageView
         android:id="@+id/imageWeather"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/weatherImageSize"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:adjustViewBounds="true"
@@ -31,8 +31,8 @@
 
     <ImageView
         android:id="@+id/imageTemperature"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/infoImagesSize"
+        android:layout_height="@dimen/infoImagesSize"
         android:layout_marginStart="24dp"
         android:layout_marginTop="34dp"
         android:src="@drawable/ic_temp"
@@ -46,14 +46,14 @@
         android:layout_marginStart="16dp"
         android:text="27\u00B0/12\u00B0"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/textInfoTextSize"
         app:layout_constraintBottom_toBottomOf="@id/imageTemperature"
         app:layout_constraintStart_toEndOf="@id/imageTemperature" />
 
     <ImageView
         android:id="@+id/imageHumidity"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/infoImagesSize"
+        android:layout_height="@dimen/infoImagesSize"
         android:src="@drawable/ic_humidity"
         app:layout_constraintStart_toStartOf="@id/imageTemperature"
         app:layout_constraintTop_toBottomOf="@id/imageTemperature"
@@ -66,14 +66,14 @@
         android:layout_marginStart="16dp"
         android:text="33%"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/textInfoTextSize"
         app:layout_constraintBottom_toBottomOf="@id/imageHumidity"
         app:layout_constraintStart_toEndOf="@id/imageHumidity" />
 
     <ImageView
         android:id="@+id/imageWind"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/infoImagesSize"
+        android:layout_height="@dimen/infoImagesSize"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="34dp"
         android:src="@drawable/ic_wind"
@@ -87,13 +87,13 @@
         android:layout_marginStart="16dp"
         android:text="5м/сек"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/textInfoTextSize"
         app:layout_constraintBottom_toBottomOf="@id/imageWind"
         app:layout_constraintStart_toEndOf="@id/imageWind" />
 
     <ImageView
         android:id="@+id/imageWindDir"
-        android:layout_width="30dp"
+        android:layout_width="19dp"
         android:layout_height="30dp"
         android:layout_marginStart="4dp"
         android:src="@drawable/ic_wind_dir"

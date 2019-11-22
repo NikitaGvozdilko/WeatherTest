@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="weatherImageSize">0dp</dimen>
+    <dimen name="infoImagesSize">30dp</dimen>
+    <dimen name="textInfoTextSize">20sp</dimen>
+</resources>
